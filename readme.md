@@ -17,6 +17,7 @@
 
 ## Overview
 
+![PPPR Pipeline](first_look.png)
 mmWave radar-based Human Pose Estimation (HPE) faces a fundamental **signal-noise dilemma**:
 
 | Input Format | Problem |
@@ -30,7 +31,6 @@ We propose **PPPR (Person Parametric Physics-informed Representation)**, a physi
 
 PPPR is optimized via **MmWave Human Parameterization (MHP)**, a differentiable pipeline enforcing dual physics-informed constraints to simultaneously maximize human signal preservation and minimize noise.
 
-![PPPR Pipeline](first_look.png)
 
 ---
 
