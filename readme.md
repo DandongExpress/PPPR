@@ -1,16 +1,11 @@
 # PPPR: Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation
 
-<p align="center">
-  <a href="https://arxiv.org/abs/2512.23054"><img src="https://img.shields.io/badge/arXiv-2512.23054-b31b1b.svg" alt="arXiv"></a>
-  <img src="https://img.shields.io/badge/Conference-Under_Review-blue.svg" alt="Status">
-  <img src="https://img.shields.io/badge/Python-3.8%2B-green.svg" alt="Python">
-  <img src="https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg" alt="PyTorch">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-</p>
+<p align="center"> <a href="https://arxiv.org/abs/2512.23054"><img src="https://img.shields.io/badge/arXiv-2512.23054-b31b1b.svg" alt="arXiv"></a> <a href="https://dl.acm.org/journal/imwut"><img src="https://img.shields.io/badge/ACM%20IMWUT-Accepted-blue.svg" alt="ACM IMWUT"></a> <img src="https://img.shields.io/badge/Python-3.8%2B-green.svg" alt="Python"> <img src="https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg" alt="PyTorch"> <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"> </p>
 
 > **Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation**  
 > Shuntian Zheng, Jiaqi Li, Guangming Wang, Minzhe Ni, Arnad Palit, Giovanni Montana, Yu Guan  
-> University of Warwick · University of Cambridge  
+> University of Warwick · University of Cambridge
+> 📝 Accepted at ACM IMWUT (Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies)
 > [📄 Paper](https://arxiv.org/abs/2512.23054)
 
 ---
