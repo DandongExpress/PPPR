@@ -5,7 +5,9 @@
 > **Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation**  
 > Shuntian Zheng, Jiaqi Li, Guangming Wang, Minzhe Ni, Arnad Palit, Giovanni Montana, Yu Guan  
 > University of Warwick · University of Cambridge
+> 
 > 📝 Accepted at ACM IMWUT (Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies)
+> 
 > [📄 Paper](https://arxiv.org/abs/2512.23054)
 
 ---
