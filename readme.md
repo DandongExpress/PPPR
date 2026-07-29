@@ -1,20 +1,17 @@
 # PPPR: Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation
 
-<p align="center"> <a href="https://arxiv.org/abs/2512.23054"><img src="https://img.shields.io/badge/arXiv-2512.23054-b31b1b.svg" alt="arXiv"></a> <a href="https://dl.acm.org/journal/imwut"><img src="https://img.shields.io/badge/ACM%20IMWUT-Accepted-blue.svg" alt="ACM IMWUT"></a> <img src="https://img.shields.io/badge/Python-3.8%2B-green.svg" alt="Python"> <img src="https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg" alt="PyTorch"> <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"> </p>
-
-> **Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation**  
-> Shuntian Zheng, Jiaqi Li, Guangming Wang, Minzhe Ni, Arnad Palit, Giovanni Montana, Yu Guan  
+> **Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation**
+> Shuntian Zheng, Jiaqi Li, Guangming Wang, Minzhe Ni, Arnad Palit, Giovanni Montana, Yu Guan
 > University of Warwick · University of Cambridge
-> 
-> 📝 Accepted at ACM IMWUT (Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies)
-> 
-> [📄 Paper](https://arxiv.org/abs/2512.23054)
+>
+> Accepted at ACM IMWUT (Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies)
+>
+> [Paper (arXiv)](https://arxiv.org/abs/2512.23054)
 
 ---
 
 ## Overview
 
-![PPPR Pipeline](first_look.png)
 mmWave radar-based Human Pose Estimation (HPE) faces a fundamental **signal-noise dilemma**:
 
 | Input Format | Problem |
@@ -22,60 +19,58 @@ mmWave radar-based Human Pose Estimation (HPE) faces a fundamental **signal-nois
 | **Heatmap** | Retains human reflections but embeds heavy environmental clutter |
 | **Point Cloud (PC)** | Suppresses noise but discards informative human reflections |
 
-We propose **PPPR (Person Parametric Physics-informed Representation)**, a physics-informed parametric intermediate representation that models each human joint as a **Gaussian primitive** encoding both:
+We propose **PPPR**, a physics-informed parametric intermediate representation that models each human joint as a **Gaussian primitive** encoding:
+
 - **Kinematic properties**: position, velocity, orientation
 - **Electromagnetic properties**: scattering intensity, Doppler signature
 
-PPPR is optimized via **MmWave Human Parameterization (MHP)**, a differentiable pipeline enforcing dual physics-informed constraints to simultaneously maximize human signal preservation and minimize noise.
-
-
----
-
-## Key Results
-
-- **4–10 mm MAJPE reduction** across 4 HPE models on 3 datasets vs. conventional Heatmap/PC inputs
-- **Cross-scene**: stable performance across diverse furniture arrangements (< 2 mm std. deviation)
-- **Cross-dataset**: 59–61% relative error reduction when transferring across different radar chipsets
-- **75% fewer parameters** and **2× faster inference** compared to PC-based baselines
-- Compatible with **vision-domain HPE models** (e.g., PoseformerV2) as a plug-and-play input
+PPPR is optimized via **MmWave Human Parameterization (MHP)**, a differentiable pipeline enforcing dual physics-informed constraints.
 
 ---
 
-## Method
+## Repository Structure
 
-### PPPR Parameterization
-
-Each joint $j$ is represented as a Gaussian primitive with parameter set $\Theta_j = \{\mathbf{p}_j, \mathbf{s}_j, \mathbf{q}_j, \mathbf{v}_j, \beta_j, \boldsymbol{\omega}_j\}$:
-
-| Parameter | Type | Description |
-|---|---|---|
-| $\mathbf{p}_j \in \mathbb{R}^3$ | Geometric | 3D joint position |
-| $\mathbf{s}_j \in \mathbb{R}^3$ | Geometric | Anisotropic scale |
-| $\mathbf{q}_j \in \mathbb{R}^4$ | Geometric | Orientation (quaternion) |
-| $\mathbf{v}_j \in \mathbb{R}^3$ | Motion | Instantaneous velocity |
-| $\beta_j \in \mathbb{R}$ | Electromagnetic | Radar cross-section opacity |
-| $\boldsymbol{\omega}_j \in \mathbb{R}^{N_d}$ | Electromagnetic | Doppler frequency features |
-
-### MmWave Human Parameterization (MHP)
-
-MHP consists of three stages:
-
-1. **Initialization** — Extract coarse joint positions and Doppler-based velocities from the raw Heatmap
-2. **Radar Simulation** — Reconstruct a synthetic Heatmap $H_\text{sim}$ via a differentiable electromagnetic forward model ($M_\text{atten}$, $M_\text{range}$, $M_\text{Dopp}$, $M_\text{angle}$)
-3. **Dual-Constraint Optimization** — Jointly minimize:
-   - **Kinematic loss** $\mathcal{L}_\text{kine}$: bone length consistency, rigid-body motion, joint angle limits
-   - **Electromagnetic loss** $\mathcal{L}_\text{EM}$: IoU-based alignment between $H_\text{sim}$ and $H_\text{ori}$
-
-$$\mathcal{L}_\text{total} = w_\text{EM} \mathcal{L}_\text{EM} + w_\text{kine} \mathcal{L}_\text{kine}$$
+```
+PPPR/
+├── prepare_pppr.py          # MHP: Heatmap → PPPR (+ PPPR-Heatmap / PPPR-PC)
+├── train.py                 # Train HPE models on heatmap / pc / pppr inputs
+├── evaluate.py              # Within- / cross-dataset evaluation
+├── requirements.txt
+├── pyproject.toml
+├── LICENSE
+├── configs/                 # Dataset-specific radar + optimization YAML
+│   ├── default.yaml
+│   ├── mmvr.yaml
+│   ├── hupr.yaml
+│   └── xrf55.yaml
+├── pppr/                    # Core MHP library (paper Sec. 4)
+│   ├── representation.py    # Θ_j = {p, s, q, v, β, ω}
+│   ├── initialization.py    # Peak / Doppler → joint seeds (Sec. 4.1)
+│   ├── radar_simulation.py  # M_atten / M_range / M_Dopp / M_angle (Sec. 4.2)
+│   ├── losses.py            # L_kine + L_EM IoU (Sec. 4.3–4.4)
+│   ├── mhp.py               # Full optimization loop
+│   ├── multi_person.py      # ETCM-CFAR + DBSCAN + MLP
+│   ├── reconstruction.py    # PPPR → Heatmap / PC
+│   ├── skeleton.py          # Bone topology & priors
+│   ├── config.py
+│   └── utils.py
+├── datasets/                # MMVR / HuPR / XRF55 loaders (+ synthetic fallback)
+├── models/                  # RETR / HuprModel / mmDiff / PoseformerV2 / MLP
+├── scripts/demo_single_frame.py
+├── tests/test_mhp_pipeline.py
+└── data/                    # Place datasets here (see below)
+```
 
 ---
 
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/PPPR.git
+git clone https://github.com/DandongExpress/PPPR.git
 cd PPPR
 pip install -r requirements.txt
+# optional editable install
+pip install -e .
 ```
 
 **Requirements**: Python ≥ 3.8, PyTorch ≥ 2.0, CUDA ≥ 11.7 (recommended)
@@ -84,7 +79,7 @@ pip install -r requirements.txt
 
 ## Datasets
 
-We evaluate on three public mmWave HPE datasets. Download and place them under `data/`:
+Download and place them under `data/`:
 
 | Dataset | Radar | Heatmap Shape | Download |
 |---|---|---|---|
@@ -101,14 +96,17 @@ data/
 └── XRF55/
 ```
 
+Each frame may be stored as an `.npz` with keys `heatmap` `[R,A]` (or `[R,A,E]`), optional `joints` `[J,3]`, optional `doppler`.
+
+> **No dataset yet?** All entry points support `--synthetic` to generate demo Heatmaps and run the full pipeline end-to-end.
+
 ---
 
 ## Usage
 
-### Prepare PPPR Representations
+### 1. Prepare PPPR Representations
 
 ```bash
-# Generate PPPR for a dataset (e.g., MMVR)
 python prepare_pppr.py \
     --dataset MMVR \
     --data_root data/MMVR \
@@ -118,10 +116,15 @@ python prepare_pppr.py \
     --n_iter 100
 ```
 
-### Train HPE Model with PPPR Input
+Synthetic quickstart:
 
 ```bash
-# Example: train RETR on MMVR with PPPR input
+python prepare_pppr.py --dataset MMVR --synthetic --synthetic_size 48 --n_iter 30
+```
+
+### 2. Train HPE Model with PPPR Input
+
+```bash
 python train.py \
     --model RETR \
     --dataset MMVR \
@@ -130,9 +133,11 @@ python train.py \
     --output_dir checkpoints/retr_mmvr_pppr
 ```
 
-Supported `--input_type` values: `heatmap`, `pc`, `pppr`, `pppr_heatmap`, `pppr_pc`
+Supported `--input_type`: `heatmap`, `pc`, `pppr`, `pppr_heatmap`, `pppr_pc`
 
-### Evaluate
+Supported `--model`: `RETR`, `HuprModel`, `mmDiff`, `PoseformerV2`, `MLP`
+
+### 3. Evaluate
 
 ```bash
 python evaluate.py \
@@ -142,10 +147,9 @@ python evaluate.py \
     --checkpoint checkpoints/retr_mmvr_pppr/best.pth
 ```
 
-### Cross-Dataset Evaluation (with Radar Calibration)
+### 4. Cross-Dataset Evaluation (Radar Calibration)
 
 ```bash
-# Train on MMVR, evaluate on XRF55 (different radar chipset)
 python evaluate.py \
     --model RETR \
     --train_dataset MMVR \
@@ -155,36 +159,41 @@ python evaluate.py \
     --cross_dataset
 ```
 
----
-
-## Supported HPE Models
-
-| Model | Input | Paper |
-|---|---|---|
-| RETR | Heatmap / PPPR | [NeurIPS 2024](https://arxiv.org/abs/2406.04317) |
-| HuprModel | Heatmap / PPPR | [WACV 2023](https://openaccess.thecvf.com/content/WACV2023/papers/Lee_HuPR_A_Benchmark_for_Human_Pose_Estimation_Using_Millimeter_Wave_WACV_2023_paper.pdf) |
-| mmDiff | PC / PPPR-PC | [ECCV 2024](https://arxiv.org/abs/2403.03686) |
-| PoseformerV2 | PPPR | [CVPR 2023](https://arxiv.org/abs/2303.17472) |
-
-PPPR works as a **plug-and-play input** — no modifications to HPE model architectures are required.
-
----
-
-## Multi-Person Extension
-
-PPPR supports multi-person HPE via:
-- **Person counting**: ETCM-CFAR + DBSCAN + MLP (99.4% weighted accuracy, 850 FPS)
-- **Inter-person collision constraints**: centroid separation $\mathcal{L}_\text{sep}$ and joint-level avoidance $\mathcal{L}_\text{coll}$
+### 5. Multi-Person
 
 ```bash
 python prepare_pppr.py --dataset MMVR --multi_person
 ```
 
+### 6. Single-Frame Demo / Tests
+
+```bash
+python scripts/demo_single_frame.py --n_iter 40
+python tests/test_mhp_pipeline.py
+```
+
+---
+
+## Method (Paper Correspondence)
+
+### PPPR Parameterization (Sec. 4.1.2)
+
+Each joint $j$: $\Theta_j = \{\mathbf{p}_j, \mathbf{s}_j, \mathbf{q}_j, \mathbf{v}_j, \beta_j, \boldsymbol{\omega}_j\}$
+
+### MHP Pipeline (Sec. 4)
+
+1. **Initialization** — peak detection + Doppler / gradient velocity → skeletal seeding
+2. **Radar Simulation** — $H_{\mathrm{sim}}=\sum_j M_{\mathrm{atten}}M_{\mathrm{range}}M_{\mathrm{Dopp}}M_{\mathrm{angle}}\mathcal{R}_j$
+3. **Dual-Constraint Optimization** —
+   - $\mathcal{L}_{\mathrm{kine}}=\mathcal{L}_{\mathrm{bone}}+\mathcal{L}_{\mathrm{rigid}}+\mathcal{L}_{\mathrm{joint}}$
+   - $\mathcal{L}_{\mathrm{EM}}=1-\mathrm{IoU}(\mathcal{B}_{\mathrm{sim}},\mathcal{B}_{\mathrm{ori}})$ (top-$\tau\%$ mask)
+   - $\mathcal{L}_{\mathrm{total}}=w_{\mathrm{EM}}\mathcal{L}_{\mathrm{EM}}+w_{\mathrm{kine}}\mathcal{L}_{\mathrm{kine}}$
+
+Default hyperparameters follow Appendix A.4 (`configs/default.yaml`): Adam $10^{-3}$, 100 iters, $w_{\mathrm{EM}}=w_{\mathrm{kine}}=0.5$, $\tau_{\mathrm{pct}}=10\%$.
+
 ---
 
 ## Citation
-
-If you find this work useful, please cite:
 
 ```bibtex
 @article{zheng2025person,

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pppr"
+version = "1.0.0"
+description = "Person Parametric Physics-informed Representation for mmWave-based Human Pose Estimation"
+readme = "readme.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+  { name = "Shuntian Zheng" },
+  { name = "Jiaqi Li" },
+  { name = "Guangming Wang" },
+  { name = "Minzhe Ni" },
+  { name = "Arnad Palit" },
+  { name = "Giovanni Montana" },
+  { name = "Yu Guan" },
+]
+dependencies = [
+  "torch>=2.0.0",
+  "numpy>=1.21.0",
+  "scipy>=1.7.0",
+  "scikit-learn>=1.0.0",
+  "matplotlib>=3.5.0",
+  "tqdm>=4.62.0",
+  "PyYAML>=6.0",
+  "Pillow>=9.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/DandongExpress/PPPR"
+Paper = "https://arxiv.org/abs/2512.23054"
+
+[tool.setuptools.packages.find]
+include = ["pppr*", "datasets*", "models*"]
