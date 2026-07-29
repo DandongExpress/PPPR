@@ -1,0 +1,21 @@
+# XRF55: TI IWR6843ISK, 256×128, Doppler+Angle FFT (Table 3)
+dataset: XRF55
+radar:
+  wavelength: 5.0e-3     # ~60 GHz
+  max_range: 6.0
+  fov_h_deg: 120.0
+  fov_v_deg: 30.0
+  range_bins: 256
+  angle_bins: 128
+  elevation_bins: 1
+  doppler_bins: 128
+  fft_mode: doppler_angle
+  prf: 8000.0
+  bandwidth: 4.0e9
+  chirp_duration: 50.0e-6
+  frame_duration: 0.05
+  antenna_spacing_az: 0.5
+  antenna_spacing_el: 0.5
+  # No explicit Doppler volume — use gradient-based velocity (Appendix A.1)
+  approximate_velocity: true
+  velocity_gamma: 0.5

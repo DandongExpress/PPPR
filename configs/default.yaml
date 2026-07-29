@@ -1,0 +1,40 @@
+# Default PPPR / MHP hyperparameters (Appendix A.4)
+optimization:
+  lr: 1.0e-3
+  betas: [0.9, 0.999]
+  n_iter: 100
+  w_em: 0.5
+  w_kine: 0.5
+  tau_pct: 10.0          # top-percentile for IoU mask (Eq. 16)
+  bone_tolerance: 0.05   # ±5 cm
+  theta_max_deg: 170.0
+
+radar:
+  wavelength: 3.896e-3   # ~77 GHz
+  max_range: 4.0
+  fov_h_deg: 90.0
+  fov_v_deg: 90.0
+  range_bins: 256
+  angle_bins: 128
+  elevation_bins: 1
+  doppler_bins: 128
+  prf: 10000.0
+  bandwidth: 4.0e9
+  chirp_duration: 40.0e-6
+  frame_duration: 0.033
+  antenna_spacing_az: 0.5   # in wavelengths
+  antenna_spacing_el: 0.5
+
+multi_person:
+  d_sep: 0.5
+  d_joint: 0.1
+  dbscan_eps: 0.3
+  dbscan_min_pts: 3
+  cfar_beta: 3.0
+
+training:
+  batch_size: 32
+  lr: 1.0e-4
+  epochs: 200
+  patience: 20
+  num_joints: 17

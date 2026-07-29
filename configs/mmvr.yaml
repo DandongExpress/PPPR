@@ -1,0 +1,18 @@
+# MMVR: TI AWR2243, 256×128, 3D Unified FFT (Table 3)
+dataset: MMVR
+radar:
+  wavelength: 3.896e-3
+  max_range: 10.0
+  fov_h_deg: 90.0
+  fov_v_deg: 40.0
+  range_bins: 256
+  angle_bins: 128
+  elevation_bins: 8
+  doppler_bins: 128
+  fft_mode: 3d_unified
+  prf: 10000.0
+  bandwidth: 4.0e9
+  chirp_duration: 40.0e-6
+  frame_duration: 0.033
+  antenna_spacing_az: 0.5
+  antenna_spacing_el: 0.5

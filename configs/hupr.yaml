@@ -1,0 +1,18 @@
+# HuPR: TI IWR1843BOOST, 64×64×8, 3D Unified FFT (Table 3)
+dataset: HuPR
+radar:
+  wavelength: 3.896e-3
+  max_range: 5.0
+  fov_h_deg: 90.0
+  fov_v_deg: 40.0
+  range_bins: 64
+  angle_bins: 64
+  elevation_bins: 8
+  doppler_bins: 64
+  fft_mode: 3d_unified
+  prf: 10000.0
+  bandwidth: 3.6e9
+  chirp_duration: 50.0e-6
+  frame_duration: 0.033
+  antenna_spacing_az: 0.5
+  antenna_spacing_el: 0.5
